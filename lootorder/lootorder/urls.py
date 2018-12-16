@@ -19,5 +19,6 @@ from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path('loot/', include('lootlists.urls')),
+    path('user/', include('user.urls')),
     path('admin/', admin.site.urls),
 ]
