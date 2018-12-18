@@ -21,14 +21,15 @@ def landing(request):
     return render(request, 'lootlists/landing.html', { 'form': form })
 
 
-@login_required
-def dashboard(request):
-    lists = LootList.objects.filter(user=request.user)
-    context = {
-        'title': 'Dashboard',
-        'lists': lists
-    }
-    return render(request, 'lootlists/dashboard.html', context)
+class ListListView(LoginRequiredMixin, ListView):
+    model = LootList
+    template_name = 'lootlists/dashboard.html'
+    context_object_name = 'lists'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Dashboard'
+        return context
 
 
 class ListCreateView(LoginRequiredMixin, CreateView):
@@ -39,3 +40,17 @@ class ListCreateView(LoginRequiredMixin, CreateView):
         messages.success(self.request, 'New list created')
         form.instance.user = self.request.user
         return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'New List'
+        return context
+
+
+class ListDetailView(LoginRequiredMixin, DetailView):
+    model = LootList
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = self.object.name
+        return context

@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h1 class="display-4 text-center my-3 pb-5">Loot Central</h1>
+  <h1 class="display-4 text-center my-3 pb-5">Dashboard</h1>
 
   <div class="d-flex align-items-baseline">
     <a href="{% url 'lootlists-new_list' %}" class="btn btn-primary m-3"><i class="fas fa-plus"></i> New List</a>
@@ -9,7 +9,7 @@
   <div class="d-flex flex-column">
     {% for list in lists %}
       <div class="btn-group btn-group-lg my-1 d-flex">
-        <a href="#" class="btn btn-outline-dark text-left flex-fill">
+        <a href="{% url 'lootlists-list' list.id %}" class="btn btn-outline-dark text-left flex-fill">
           <span class="font-weight-bold">{{ list.name }}</span>
           <small class="text-muted">{{ list.description }}</small>
         </a>
