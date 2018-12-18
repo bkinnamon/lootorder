@@ -1,3 +1,6 @@
 from django.contrib import admin
+from .models import LootList, LootItem
 
-# Register your models here.
+
+admin.site.register(LootList)
+admin.site.register(LootItem)
