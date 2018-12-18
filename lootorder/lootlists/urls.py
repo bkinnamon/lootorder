@@ -3,5 +3,6 @@ from django.urls import path, include
 from . import views
 
 urlpatterns = [
-    path('', views.dashboard, name='lootlists-dashboard'),
+    path('', views.landing, name='lootlists-landing'),
+    path('dashboard/', views.dashboard, name='lootlists-dashboard'),
 ]

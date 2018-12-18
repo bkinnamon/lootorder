@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<div class="d-flex align-items-center">
+  <div class="col-md p-5">
+    <h1 class="display-1">Loot<span class="font-weight-bold">Order</span></h1>
+    <p class="lead">
+      Organizing group gifting
+    </p>
+  </div>
+  <div class="col-md card mt-5 p-0">
+    <div class="card-header">
+      <h2 class="card-title">Signup</h2>
+    </div>
+    <div class="card-body">
+      <form method="post" action="{% url 'user-signup' %}">
+        {% csrf_token %}
+
+        {{ form|crispy }}
+
+        <div class="form-group">
+          <button type="submit" class="form-control btn btn-primary">Signup</button>
+        </div>
+
+        <div class="form-group">
+          <a class="form-control btn text-primary" href="{% url 'user-login' %}">Already have an account?</a>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

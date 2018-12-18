@@ -24,25 +24,32 @@
           <span class="navbar-toggler-icon"></span>
         </button>
 
-        <a class="navbar-brand" href="{% url 'lootlists-dashboard' %}">Loot<span class="font-weight-bold">Order</span></a>
+        <a class="navbar-brand" href="{% url 'lootlists-landing' %}">Loot<span class="font-weight-bold">Order</span></a>
 
         <div class="collapse navbar-collapse justify-content-end" id="mainNavbar">
           <ul class="navbar-nav">
+
+            {% if user.is_authenticated %}
+
             <li class="nav-item">
               <a class="nav-link" href="{% url 'lootlists-dashboard' %}">Dashboard</a>
             </li>
-
-            {% if user.is_authenticated %}
             <li class="nav-item">
               <a class="nav-link" href="{% url 'user-logout' %}">Logout</a>
             </li>
+
             {% else %}
+
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'lootlists-landing' %}">Landing</a>
+            </li>
             <li class="nav-item">
               <a class="nav-link" href="{% url 'user-login' %}">Login</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="{% url 'user-signup' %}">Signup</a>
             </li>
+
             {% endif %}
 
           </ul>
