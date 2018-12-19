@@ -13,8 +13,8 @@
           <span class="font-weight-bold">{{ list.name }}</span>
           <small class="text-muted">{{ list.description }}</small>
         </a>
-        <a href="#" class="btn btn-secondary"><i class="fas fa-edit"></i></a>
-        <a href="#" class="btn btn-danger"><i class="fas fa-trash-alt"></i></a>
+        <a href="{% url 'lootlists-update_list' list.id %}" class="btn btn-secondary"><i class="fas fa-edit"></i></a>
+        <a href="{% url 'lootlists-delete_list' list.id %}" class="btn btn-danger"><i class="fas fa-trash-alt"></i></a>
       </div>
     {% endfor %}
   </div>
