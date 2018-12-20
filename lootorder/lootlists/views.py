@@ -32,6 +32,7 @@ class ListListView(LoginRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Dashboard'
+        context['guest_lists'] = self.request.user.guest_lists.all()
         return context
 
 
@@ -70,7 +71,7 @@ class ListUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
     def test_func(self):
         list = self.get_object()
-        return list.user == self.request.user
+        return list.owner == self.request.user
 
 
 class ListDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
@@ -79,7 +80,7 @@ class ListDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
     def test_func(self):
         list = self.get_object()
-        return list.user == self.request.user
+        return list.owner == self.request.user
 
 
 class ItemCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
@@ -101,7 +102,7 @@ class ItemCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
         return super().form_valid(form)
 
     def test_func(self):
-        return self.lootlist.user == self.request.user
+        return self.lootlist.owner == self.request.user
 
 
 class ItemUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
@@ -123,7 +124,7 @@ class ItemUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         return super().form_valid(form)
 
     def test_func(self):
-        return self.lootlist.user == self.request.user
+        return self.lootlist.owner == self.request.user
 
 
 def toggle_item(request, list_id, pk):
@@ -140,4 +141,4 @@ class ItemDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         return reverse('lootlists-list', kwargs={'pk': self.kwargs['list_id']})
 
     def test_func(self):
-        return self.get_object().list.user == self.request.user
+        return self.get_object().list.owner == self.request.user

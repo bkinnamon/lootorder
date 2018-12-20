@@ -4,7 +4,8 @@ from django.urls import reverse
 
 
 class LootList(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    guests = models.ManyToManyField(User, related_name='guest_lists')
     name = models.CharField(max_length=256, default='')
     description = models.TextField(default='')
 
@@ -25,9 +26,3 @@ class LootItem(models.Model):
 
     def get_absolute_url(self):
         return reverse('lootlists-list', kwargs={'pk': self.list_id})
-
-    def should_show(self, user):
-        if self.taken is False or self.list.user == user:
-            return True
-        else:
-            return False
