@@ -11,18 +11,35 @@
     {% for item in lootlist.lootitem_set.all %}
       {% block item %}
       <div class="btn-group btn-group-lg my-1 d-flex">
-        <a href="#" class="btn btn-outline-dark">
-          <i class="fas fa-check"></i>
-        </a>
-        <a href="#" class="btn btn-outline-dark flex-fill">
-          {{ item.name }}
-        </a>
-        <a href="{% url 'lootlists-update_item' list_id=lootlist.id pk=item.id %}" class="btn btn-secondary">
-          <i class="fas fa-edit"></i>
-        </a>
-        <a href="#" class="btn btn-danger">
-          <i class="fas fa-trash"></i>
-        </a>
+
+        {% if item.list.user == user %}
+
+          <a href="{% url 'lootlists-update_item' list_id=lootlist.id pk=item.id %}" class="btn btn-outline-dark flex-fill text-left">
+            {{ item.name }}
+          </a>
+
+          <a href="{% url 'lootlists-update_item' list_id=lootlist.id pk=item.id %}" class="btn btn-secondary">
+            <i class="fas fa-edit"></i>
+          </a>
+
+          <a href="{% url 'lootlists-delete_item' list_id=lootlist.id pk=item.id %}" class="btn btn-danger">
+            <i class="fas fa-trash"></i>
+          </a>
+
+        {% else %}
+
+          <a href="{% url 'lootlists-toggle_item' list_id=lootlist.id pk=item.id %}" class="btn btn-outline-dark flex-fill text-left">
+            {% if item.taken %}
+              <i class="far fa-check-square"></i>
+              <del>{{ item.name }}</del>
+            {% else %}
+              <i class="far fa-square"></i>
+              {{ item.name }}
+            {% endif %}
+          </a>
+
+        {% endif %}
+
       </div>
       {% endblock item %}
     {% endfor %}

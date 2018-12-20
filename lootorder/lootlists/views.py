@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.urls import reverse_lazy
+from django.urls import reverse, reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import (
     ListView,
@@ -23,9 +23,11 @@ def landing(request):
 
 
 class ListListView(LoginRequiredMixin, ListView):
-    model = LootList
     template_name = 'lootlists/dashboard.html'
     context_object_name = 'lists'
+
+    def get_queryset(self):
+        return self.request.user.lootlist_set.all()
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -122,3 +124,20 @@ class ItemUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
     def test_func(self):
         return self.lootlist.user == self.request.user
+
+
+def toggle_item(request, list_id, pk):
+    item = get_object_or_404(LootItem, id=pk)
+    item.taken = not item.taken
+    item.save()
+    return redirect('lootlists-list', pk=list_id)
+
+
+class ItemDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = LootItem
+
+    def get_success_url(self):
+        return reverse('lootlists-list', kwargs={'pk': self.kwargs['list_id']})
+
+    def test_func(self):
+        return self.get_object().list.user == self.request.user
