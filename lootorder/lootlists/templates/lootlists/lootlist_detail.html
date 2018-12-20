@@ -3,18 +3,29 @@
 {% block content %}
   <h1 class="display-4 text-center my-3 pb-5">{{ lootlist.name }}</h1>
 
-  <a href="{% url 'lootlists-new_item' lootlist.id %}" class="btn btn-primary m-3">
-    <i class="fas fa-plus"></i> New Item
-  </a>
+  {% if lootlist.owner == user %}
+    <a href="{% url 'lootlists-new_item' list_id=lootlist.id %}"
+      class="btn btn-primary m-3"
+    >
+      <i class="fas fa-plus"></i> New Item
+    </a>
+  {% endif %}
+
+
   <div class="d-flex flex-column">
     {% block new_item %}{% endblock new_item %}
     {% for item in lootlist.lootitem_set.all %}
       {% block item %}
       <div class="btn-group btn-group-lg my-1 d-flex">
 
-        {% if item.list.user == user %}
+        {% if item.list.owner == user %}
 
-          <a href="{% url 'lootlists-update_item' list_id=lootlist.id pk=item.id %}" class="btn btn-outline-dark flex-fill text-left">
+          <a
+            href="
+              {% url 'lootlists-update_item' list_id=lootlist.id pk=item.id %}
+            "
+            class="btn btn-outline-dark flex-fill text-left"
+          >
             {{ item.name }}
           </a>
 
@@ -30,10 +41,13 @@
 
           <a href="{% url 'lootlists-toggle_item' list_id=lootlist.id pk=item.id %}" class="btn btn-outline-dark flex-fill text-left">
             {% if item.taken %}
-              <i class="far fa-check-square"></i>
+              <i class="far fa-check-square mr-2"></i>
               <del>{{ item.name }}</del>
+              <small class="text-muted">
+                ({{ item.taken.username }})
+              </small>
             {% else %}
-              <i class="far fa-square"></i>
+              <i class="far fa-square mr-2"></i>
               {{ item.name }}
             {% endif %}
           </a>

@@ -7,7 +7,7 @@ class LootList(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     guests = models.ManyToManyField(User, related_name='guest_lists')
     name = models.CharField(max_length=256, default='')
-    description = models.TextField(default='')
+    description = models.CharField(max_length=256, default='')
 
     def __str__(self):
         return self.name
@@ -19,7 +19,13 @@ class LootList(models.Model):
 class LootItem(models.Model):
     list = models.ForeignKey(LootList, on_delete=models.CASCADE)
     name = models.CharField(max_length=256)
-    taken = models.BooleanField(default=False)
+    taken = models.ForeignKey(
+        User,
+        related_name='taken_items',
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True
+    )
 
     def __str__(self):
         return self.name

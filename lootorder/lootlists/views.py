@@ -38,7 +38,7 @@ class ListListView(LoginRequiredMixin, ListView):
 
 class ListCreateView(LoginRequiredMixin, CreateView):
     model = LootList
-    fields = ['name', 'description']
+    fields = ['name', 'description', 'guests']
 
     def form_valid(self, form):
         messages.success(self.request, 'New list created')
@@ -51,7 +51,7 @@ class ListCreateView(LoginRequiredMixin, CreateView):
         return context
 
 
-class ListDetailView(LoginRequiredMixin, DetailView):
+class ListDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
     model = LootList
 
     def get_context_data(self, **kwargs):
@@ -59,10 +59,14 @@ class ListDetailView(LoginRequiredMixin, DetailView):
         context['title'] = self.object.name
         return context
 
+    def test_func(self):
+        list = self.get_object()
+        return list.owner == self.request.user or self.request.user in list.guests.all()
+
 
 class ListUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = LootList
-    fields = ['name', 'description']
+    fields = ['name', 'description', 'guests']
 
     def form_valid(self, form):
         messages.success(self.request, 'List updated')
@@ -129,8 +133,18 @@ class ItemUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
 def toggle_item(request, list_id, pk):
     item = get_object_or_404(LootItem, id=pk)
-    item.taken = not item.taken
-    item.save()
+
+    if item.taken is None:
+        messages.success(request, f'You have claimed {item.name}.')
+        item.taken = request.user
+        item.save()
+    elif item.taken == request.user:
+        messages.success(request, f'You have unclaimed {item.name}.')
+        item.taken = None
+        item.save()
+    else:
+        messages.error(request, f'You cannot unclaim {item.name}.')
+
     return redirect('lootlists-list', pk=list_id)
 
 

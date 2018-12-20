@@ -32,7 +32,9 @@
             {% if user.is_authenticated %}
 
             <li class="nav-item">
-              <a class="nav-link" href="{% url 'lootlists-dashboard' %}">Dashboard</a>
+              <a class="nav-link" href="{% url 'lootlists-dashboard' %}">
+                {{ user.username }}
+              </a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="{% url 'user-logout' %}">Logout</a>
@@ -62,7 +64,7 @@
 
       {% if messages %}
         {% for message in messages %}
-          <div class="alert alert-{{ message.level_tag }} alert-dismissable fade show my-2" role="alert">
+          <div class="alert {{ message.level_tag }} alert-dismissable fade show my-2" role="alert">
             {{ message }}
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
               <span aria-hidden="true">&times;</span>
