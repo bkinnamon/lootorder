@@ -1,0 +1,16 @@
+{% extends 'lootlists/lootlist_detail.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block new_item %}
+
+<form method="POST">
+  {% csrf_token %}
+
+  {{ form|crispy }}
+
+  <button type="submit" class="btn btn-primary">Save</button>
+
+</form>
+
+{% endblock new_item %}

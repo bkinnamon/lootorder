@@ -22,3 +22,12 @@ class LootItem(models.Model):
 
     def __str__(self):
         return self.name
+
+    def get_absolute_url(self):
+        return reverse('lootlists-list', kwargs={'pk': self.list_id})
+
+    def should_show(self, user):
+        if self.taken is False or self.list.user == user:
+            return True
+        else:
+            return False

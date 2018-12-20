@@ -33,4 +33,14 @@ urlpatterns = [
         views.ListDeleteView.as_view(),
         name='lootlists-delete_list'
     ),
+    path(
+        'list/<int:list_id>/item/new/',
+        views.ItemCreateView.as_view(),
+        name='lootlists-new_item'
+    ),
+    path(
+        'list/<int:list_id>/item/<int:pk>/update/',
+        views.ItemUpdateView.as_view(),
+        name='lootlists-update_item'
+    )
 ]

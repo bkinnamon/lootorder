@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import (
@@ -11,7 +11,7 @@ from django.views.generic import (
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from user.forms import UserRegisterForm
-from .models import LootList
+from .models import LootList, LootItem
 from .forms import LootListForm
 
 
@@ -78,3 +78,47 @@ class ListDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def test_func(self):
         list = self.get_object()
         return list.user == self.request.user
+
+
+class ItemCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
+    model = LootItem
+    fields = ['name']
+
+    def dispatch(self, request, *args, **kwargs):
+        self.lootlist = get_object_or_404(LootList, id=self.kwargs['list_id'])
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['lootlist'] = self.lootlist
+        context['is_new'] = True
+        return context
+
+    def form_valid(self, form):
+        form.instance.list = self.lootlist
+        return super().form_valid(form)
+
+    def test_func(self):
+        return self.lootlist.user == self.request.user
+
+
+class ItemUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = LootItem
+    fields = ['name']
+
+    def dispatch(self, request, *args, **kwargs):
+        self.lootlist = get_object_or_404(LootList, id=self.kwargs['list_id'])
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['lootlist'] = self.lootlist
+        context['is_new'] = False
+        return context
+
+    def form_valid(self, form):
+        form.instance.list = self.lootlist
+        return super().form_valid(form)
+
+    def test_func(self):
+        return self.lootlist.user == self.request.user

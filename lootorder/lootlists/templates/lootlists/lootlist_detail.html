@@ -3,5 +3,28 @@
 {% block content %}
   <h1 class="display-4 text-center my-3 pb-5">{{ lootlist.name }}</h1>
 
-  <p class="lead">{{ lootlist.description }}</p>
-{% endblock %}
+  <a href="{% url 'lootlists-new_item' lootlist.id %}" class="btn btn-primary m-3">
+    <i class="fas fa-plus"></i> New Item
+  </a>
+  <div class="d-flex flex-column">
+    {% block new_item %}{% endblock new_item %}
+    {% for item in lootlist.lootitem_set.all %}
+      {% block item %}
+      <div class="btn-group btn-group-lg my-1 d-flex">
+        <a href="#" class="btn btn-outline-dark">
+          <i class="fas fa-check"></i>
+        </a>
+        <a href="#" class="btn btn-outline-dark flex-fill">
+          {{ item.name }}
+        </a>
+        <a href="{% url 'lootlists-update_item' list_id=lootlist.id pk=item.id %}" class="btn btn-secondary">
+          <i class="fas fa-edit"></i>
+        </a>
+        <a href="#" class="btn btn-danger">
+          <i class="fas fa-trash"></i>
+        </a>
+      </div>
+      {% endblock item %}
+    {% endfor %}
+  </div>
+{% endblock content %}
