@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse, reverse_lazy
+from django.http import JsonResponse
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import (
     ListView,
@@ -12,7 +13,9 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from user.forms import UserRegisterForm
 from .models import LootList, LootItem
+from django.contrib.auth.models import User
 from .forms import LootListForm
+from dal import autocomplete
 
 
 def landing(request):
@@ -38,7 +41,7 @@ class ListListView(LoginRequiredMixin, ListView):
 
 class ListCreateView(LoginRequiredMixin, CreateView):
     model = LootList
-    fields = ['name', 'description', 'guests']
+    form_class = LootListForm
 
     def form_valid(self, form):
         messages.success(self.request, 'New list created')
@@ -66,7 +69,7 @@ class ListDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
 
 class ListUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = LootList
-    fields = ['name', 'description', 'guests']
+    form_class = LootListForm
 
     def form_valid(self, form):
         messages.success(self.request, 'List updated')
@@ -156,3 +159,13 @@ class ItemDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
     def test_func(self):
         return self.get_object().list.owner == self.request.user
+
+
+class UserAutocomplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        if not self.request.user.is_authenticated:
+            return User.objects.none()
+        results = User.objects.all()
+        if self.q:
+            results = results.filter(username__icontains=self.q)
+        return results

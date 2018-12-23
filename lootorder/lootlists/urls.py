@@ -52,5 +52,10 @@ urlpatterns = [
         'list/<int:list_id>/item/<int:pk>/delete/',
         views.ItemDeleteView.as_view(),
         name='lootlists-delete_item'
-    )
+    ),
+    path(
+        'usersearch/',
+        views.UserAutocomplete.as_view(),
+        name='lootlists-user_search'
+    ),
 ]
