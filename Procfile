@@ -1,1 +1,1 @@
-web: gunicorn lootorder/lootorder.wsgi
+web: gunicorn lootorder.wsgi
