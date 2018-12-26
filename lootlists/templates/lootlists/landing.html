@@ -1,34 +1,36 @@
-{% extends 'base.html' %}
+{% extends 'base.html' %} {% load crispy_forms_tags %} {% block content %}
 
-{% load crispy_forms_tags %}
+<div class="row">
+  <div class="col-lg py-5 p-lg-5 text-center text-lg-left">
+    <h1 class="display-4 d-lg-none">
+      Loot<span class="font-weight-bold text-brand">Order</span>
+    </h1>
+    <h1 class="display-1 mt-5 d-none d-lg-block">
+      Loot<span class="font-weight-bold text-brand">Order</span>
+    </h1>
 
-{% block content %}
-
-<div class="d-flex align-items-center">
-  <div class="col-md p-5">
-    <h1 class="display-1">Loot<span class="font-weight-bold">Order</span></h1>
-    <p class="lead">
-      Organizing group gifting
-    </p>
+    <p class="lead">Organizing gatherings, parties and friendships.</p>
   </div>
-  <div class="col-md card mt-5 p-0">
-    <div class="card-header">
-      <h2 class="card-title">Signup</h2>
-    </div>
+
+  <div class="col-lg card mt-lg-5 p-0">
+    <div class="card-header"><h2 class="card-title">Signup</h2></div>
     <div class="card-body">
       <form method="post" action="{% url 'user-signup' %}">
         {% csrf_token %}
 
-        {{ form|crispy }}
+        {{ form | crispy }}
 
         <div class="form-group">
-          <button type="submit" class="form-control btn btn-primary">Signup</button>
+          <button type="submit" class="form-control btn btn-primary">
+            Signup
+          </button>
         </div>
 
         <div class="form-group">
-          <a class="form-control btn text-primary" href="{% url 'user-login' %}">Already have an account?</a>
+          <a class="form-control btn text-primary" href="{% url 'user-login' %}"
+            >Already have an account?</a
+          >
         </div>
-
       </form>
     </div>
   </div>
